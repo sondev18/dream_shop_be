@@ -29,7 +29,7 @@ const productSchema = new Schema(
     processor_brand: { type: String, require: false, default: "" },
     processor_name: { type: String, require: false, default: "" },
     processor_gnrtn: { type: String, require: false, default: "" },
-    imageUrl: { type: String, require: false, default: "" },
+    imageUrl: { type: Array, require: false, default: "" },
     stock: {
       type: String,
       require: false,

@@ -11,6 +11,8 @@ var app = express();
 app.use(cors());
 const mongoose = require("mongoose");
 const { AppError, sendResponse } = require("./helpers/utils");
+const createData = require("./faker");
+
 const mongoURI = process.env.MONGODB_URI;
 mongoose
   .connect(mongoURI)
@@ -28,7 +30,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/api", indexRouter);
-
+createData.createFakeDataLaptop()
 app.use((req, res, next) => {
   const err = new AppError(404, "Not Found", "Bad Request");
   next(err);
