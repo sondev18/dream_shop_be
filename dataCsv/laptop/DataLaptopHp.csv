@@ -1,4 +1,4 @@
-brand,model,processor_brand,processor_name,processor_gnrtn,ram_gb,ram_type,ssd,hdd,os,os_bit,graphic_card_gb,weight,display_size,warranty,Touchscreen,msoffice,latest_price,old_price,discount,star_rating,ratings,reviews,img_url,img_url2,img_url3,img_url4,img_url5
+brand,model,processor_brand,processor_name,processor_gnrtn,ram_gb,ram_type,ssd,hdd,os,os_bit,graphic_card_gb,weight,display_size,warranty,Touchscreen,msoffice,latest_price,old_price,discount,star_rating,ratings,reviews,img_url1,img_url2,img_url3,img_url4,img_url5
 HP,APU,AMD,APU Dual,10th,4 GB GB,DDR4,0 GB,1024 GB,Windows,32-bit,0,Casual,14,0,No,No,20900,22825,8,3.9,1185,141,,,,,
 HP,Athlon,AMD,Athlon Dual,10th,32 GB GB,DDR4,32 GB,0 GB,Windows,32-bit,4,Casual,14,0,No,No,26899,27668,2,0,0,0,,,,,
 HP,x360,Intel,Core i3,11th,8 GB GB,DDR4,256 GB,0 GB,Windows,64-bit,0,Casual,14,1,Yes,No,56490,64923,12,0,0,0,,,,,

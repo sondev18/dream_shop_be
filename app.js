@@ -11,7 +11,7 @@ var app = express();
 app.use(cors());
 const mongoose = require("mongoose");
 const { AppError, sendResponse } = require("./helpers/utils");
-const { loadingBrand, loadingccategories, fakerShopLaptop, fakerShopCamera } = require("./faker");
+const { loadingBrand, loadingcategories, fakerShopLaptop, fakerShopCamera } = require("./faker");
 
 const mongoURI = process.env.MONGODB_URI;
 mongoose
@@ -31,7 +31,7 @@ app.use(express.static(path.join(__dirname, "public")));
 // fakerShopLaptop()
 // fakerShopCamera()
 // loadingBrand()
-// loadingccategories()
+// loadingcategories()
 app.use("/api", indexRouter);
 
 app.use((req, res, next) => {

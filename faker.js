@@ -1,5 +1,4 @@
 const csv = require("csvtojson");
-const mongoose = require("mongoose");
 const Brand = require("./model/brand");
 const Catego = require("./model/category");
 const Product = require("./model/product");
@@ -14,7 +13,7 @@ const loadingBrand = async () => {
     }
   });
 };
-const loadingccategories = async () => {
+const loadingcategories = async () => {
   Listcategory.forEach(async (e) => {
     let category = await Catego.findOne({ name: e });
     if (!category) {
@@ -23,11 +22,11 @@ const loadingccategories = async () => {
   });
 };
 const fakerShopLaptop = async () => {
-  let data = await csv().fromFile("./dataCsv/laptop/DataLaptopMsi.csv"); // laptop, camera, phone, rolex
+  let data = await csv().fromFile("./dataCsv/laptop/DataLaptopAcer.csv"); // laptop, camera, phone, rolex
   data = new Set(data.map((e) => e));
   data = Array.from(data);
   const category = await Catego.findOne({ name: "laptop" }); // laptop, camera, phone, rolex
-  let brand = await Brand.findOne({ brand: "msi" });
+  let brand = await Brand.findOne({ brand: "acer" });
   const newPro = ["new", "old"];
 
   for (let i = 0; i < data.length; i++) {
@@ -58,7 +57,7 @@ const fakerShopLaptop = async () => {
       ratings: Math.floor(Math.random() * (5 - 3) + 3),
       newProduct: newPro[random],
       description: {
-        model: data[i]?.model?.toLowerCase(),
+        model: `${data[i].brand} ${data[i]?.model?.toLowerCase()}`,
         latest_price: Number(data[i]?.latest_price) === 0 ? 1000 : latest_price,
         old_price: Number(data[i]?.old_price),
         discount: Number(data[i]?.latest_price) === 0 ? 0 : discount,
@@ -122,7 +121,7 @@ const fakerShopCamera = async () => {
       ratings: Math.floor(Math.random() * (5 - 3) + 3),
       newProduct: newPro[random],
       description: {
-        model: data[i]?.model?.toLowerCase(),
+        model: data[i]?.model?.toLowerCase() || data[i]?.Model,
         latest_price: Number(data[i]?.latest_price) === 0 ? 1000 : latest_price,
         old_price: Number(data[i]?.Price),
         discount: Number(data[i]?.Price) === 0 ? 0 : discount,
@@ -150,4 +149,19 @@ const fakerShopCamera = async () => {
   }
 
 };
-module.exports = { loadingBrand, loadingccategories, fakerShopLaptop, fakerShopCamera };
+const faker = async () => {
+  const category = await Catego.findOne({ name: "camera" });
+  let brand = await Brand.findOne({ brand: "fujifilm" });
+  const products = await Product.find({
+    authorCatego: category._id,
+    authorBrand: brand._id,
+  });
+  const total = await Total.create({
+    authorCatego: category._id,
+    authorBrand: brand._id,
+    totalProduct: Number(data.length),
+    quantityRemaining: Number(data.length),
+  });
+}
+
+module.exports = { loadingBrand, loadingcategories, fakerShopLaptop, fakerShopCamera };
