@@ -22,11 +22,11 @@ const loadingcategories = async () => {
   });
 };
 const fakerShopLaptop = async () => {
-  let data = await csv().fromFile("./dataCsv/laptop/DataLaptopMsi.csv"); // laptop, camera, phone, rolex
+  let data = await csv().fromFile("./dataCsv/laptop/DataLaptopLenovo.csv"); // laptop, camera, phone, rolex
   data = new Set(data.map((e) => e));
   data = Array.from(data);
   const category = await Catego.findOne({ name: "laptop" }); // laptop, camera, phone, rolex
-  let brand = await Brand.findOne({ brand: "msi" });
+  let brand = await Brand.findOne({ brand: "lenovo" });
   const newPro = ["new", "old"];
 
   for (let i = 0; i < data.length; i++) {
@@ -86,11 +86,11 @@ const fakerShopLaptop = async () => {
 
 };
 const fakerShopCamera = async () => {
-  let data = await csv().fromFile("./dataCsv/camera/DatacameraFujifilm.csv"); // laptop, camera, phone, rolex
+  let data = await csv().fromFile("./dataCsv/camera/DatacameraSony.csv"); // laptop, camera, phone, rolex
   data = new Set(data.map((e) => e));
   data = Array.from(data);
   const category = await Catego.findOne({ name: "camera" }); // laptop, camera, phone, rolex
-  let brand = await Brand.findOne({ brand: "fujifilm" }); //
+  let brand = await Brand.findOne({ brand: "sony" }); //
   const newPro = ["new", "old"];
 
   for (let i = 0; i < data.length; i++) {

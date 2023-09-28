@@ -30,9 +30,9 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 // fakerShopLaptop()
 // fakerShopCamera()
+// fakerShopPhone()
 // loadingBrand()
 // loadingcategories()
-// fakerShopPhone()
 app.use("/api", indexRouter);
 
 app.use((req, res, next) => {

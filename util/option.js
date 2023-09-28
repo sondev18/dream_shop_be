@@ -9,6 +9,7 @@ const Listbrand = [
   "fujifilm",
   "nikon",
   "sony",
+  "canon",
   "samsung",
   "huawei",
   "xiaomi",
