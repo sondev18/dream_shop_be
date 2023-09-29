@@ -22,11 +22,11 @@ const loadingcategories = async () => {
   });
 };
 const fakerShopLaptop = async () => {
-  let data = await csv().fromFile("./dataCsv/laptop/DataLaptopLenovo.csv"); // laptop, camera, phone, rolex
+  let data = await csv().fromFile("./dataCsv/laptop/DataLaptopMsi.csv"); // laptop, camera, phone, rolex
   data = new Set(data.map((e) => e));
   data = Array.from(data);
   const category = await Catego.findOne({ name: "laptop" }); // laptop, camera, phone, rolex
-  let brand = await Brand.findOne({ brand: "lenovo" });
+  let brand = await Brand.findOne({ brand: "msi" });
   const newPro = ["new", "old"];
 
   for (let i = 0; i < data.length; i++) {
@@ -83,14 +83,13 @@ const fakerShopLaptop = async () => {
       },
     });
   }
-
 };
 const fakerShopCamera = async () => {
-  let data = await csv().fromFile("./dataCsv/camera/DatacameraSony.csv"); // laptop, camera, phone, rolex
+  let data = await csv().fromFile("./dataCsv/camera/DatacameraNikon.csv"); // laptop, camera, phone, rolex
   data = new Set(data.map((e) => e));
   data = Array.from(data);
   const category = await Catego.findOne({ name: "camera" }); // laptop, camera, phone, rolex
-  let brand = await Brand.findOne({ brand: "sony" }); //
+  let brand = await Brand.findOne({ brand: "nikon" }); //
   const newPro = ["new", "old"];
 
   for (let i = 0; i < data.length; i++) {
@@ -147,7 +146,6 @@ const fakerShopCamera = async () => {
       },
     });
   }
-
 };
 const fakerShopPhone = async () => {
   let data = await csv().fromFile("./dataCsv/phone/DataPhoneApple.csv"); //phone
@@ -211,7 +209,6 @@ const fakerShopPhone = async () => {
       },
     });
   }
-
 };
 const faker = async () => {
   const category = await Catego.findOne({ name: "camera" });
@@ -226,6 +223,12 @@ const faker = async () => {
     totalProduct: Number(data.length),
     quantityRemaining: Number(data.length),
   });
-}
+};
 
-module.exports = { loadingBrand, loadingcategories, fakerShopLaptop, fakerShopCamera, fakerShopPhone };
+module.exports = {
+  loadingBrand,
+  loadingcategories,
+  fakerShopLaptop,
+  fakerShopCamera,
+  fakerShopPhone,
+};
