@@ -12,7 +12,6 @@ userBookingController.createUserBooking = catchAsync(async (req, res, next) => {
   const emailInfo = await UserBooking.findOne({
     authorUser: user._id,
   });
-
   if (!emailInfo) {
     if (userBooking.phone.length < 10)
       throw new AppError(400, "Invalid Phone Number");
@@ -26,9 +25,19 @@ userBookingController.createUserBooking = catchAsync(async (req, res, next) => {
       district: userBooking.district,
       city: userBooking.city,
       authorUser: user._id,
+      ortherAddress: userBooking.ortherAddress
     });
 
-    sendResponse(res, 200, true, [], null, "create user booking success");
+    sendResponse(res, 200, true, data, null, "create user booking success");
+  }else {
+    const allow = ["name", "phone", "email", "address", "streetsName", "district", "city"];
+    allow.forEach(async (ele) => {
+      if (userBooking[ele] !== undefined) {
+        emailInfo[ele] = userBooking[ele];
+      }
+    });
+    const data=  await emailInfo.save()
+    sendResponse(res, 200, true, data, null, "user booking success");
   }
 });
 // get user Booking
