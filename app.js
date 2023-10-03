@@ -11,9 +11,8 @@ var app = express();
 app.use(cors());
 const mongoose = require("mongoose");
 const { AppError, sendResponse } = require("./helpers/utils");
-const { loadingBrand, loadingcategories, fakerShopLaptop, fakerShopCamera, fakerShopPhone } = require("./faker");
-
 const mongoURI = process.env.MONGODB_URI;
+
 mongoose
   .connect(mongoURI)
   .then(() => {
@@ -23,16 +22,12 @@ mongoose
     console.log(err);
   });
 
-app.use(logger("dev"));
+app.use(logger("dev")); 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
-// fakerShopLaptop()
-// fakerShopCamera()
-// fakerShopPhone()
-// loadingBrand()
-// loadingcategories()
+
 app.use("/api", indexRouter);
 
 app.use((req, res, next) => {
