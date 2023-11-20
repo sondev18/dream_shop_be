@@ -98,7 +98,7 @@ productController.getAllProduct = catchAsync(async (req, res, next) => {
   }
 
   const filterCrirerial = isQuery === true ? { $and: filterConditions } : {};
-  let data = await Product.find({}) // {name: "" , emal: ""}
+  let data = await Product.find(filterCrirerial) // {name: "" , emal: ""}
     .sort(type)
     .collation({ locale: "en_US", numericOrdering: true })
     .populate([
