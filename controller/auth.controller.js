@@ -1,5 +1,4 @@
 const { AppError, sendResponse, catchAsync } = require("../helpers/utils");
-const { faker } = require("@faker-js/faker");
 const bcrypt = require("bcryptjs");
 
 const User = require("../model/user");

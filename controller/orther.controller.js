@@ -51,49 +51,69 @@ ortherController.createOrther = catchAsync(async (req, res, next) => {
       ortherItems,
     });
   } else if (orthers) {
-    const idOrther = orthers?.ortherItems.find((obj) => {
-      if (obj.productId.equals(productId)) {
-        isUpdate = true;
-        return obj;
+    const ortherItems = {
+      description: {
+        ...product.description,
+        brand: product.authorBrand.brand,
+        category: product.authorCatego.name,
+      },
+      imageUrl: product.imageUrl,
+      productId: product._id,
+      price: product.description.latest_price,
+      quantity: 1,
+    };
+
+    const orther = await Orther.updateMany(
+      { _id: orthers?._id },
+      {
+        $push: { ortherItems: ortherItems },
+        totalProduct: orthers?.totalProduct + 1,
       }
-    });
+    );
+    // const idOrther = orthers?.ortherItems.find((obj) => {
+    //   if (obj.productId.equals(productId)) {
+    //     isUpdate = true;
+    //     return obj;
+    //   }
+    // });
+    
+    // if (isUpdate === true) {
+    //   const orther = await Orther.updateMany(
+    //     { _id: orthers._id },
+    //     {
+    //       $set: {
+    //         "ortherItems.$[element].quantity":
+    //           idOrther.quantity + idOrther.quantity,
+    //       },
+    //       totalProduct: orthers?.totalProduct + orthers?.totalProduct,
+    //     },
+    //     {
+    //       arrayFilters: [{ "element._id": { $eq: idOrther._id } }],
+    //       upsert: true,
+    //     }
+    //   );
+    // } else {
+    //   console.log("3")
+    //   const ortherItems = {
+    //     description: {
+    //       ...product.description,
+    //       brand: product.authorBrand.brand,
+    //       category: product.authorCatego.name,
+    //     },
+    //     imageUrl: product.imageUrl,
+    //     productId: product._id,
+    //     price: product.description.latest_price,
+    //     quantity: 1,
+    //   };
 
-    if (isUpdate === true) {
-      const orther = await Orther.updateMany(
-        { _id: orthers._id },
-        {
-          $set: {
-            "ortherItems.$[element].quantity":
-              idOrther.quantity + idOrther.quantity,
-          },
-          totalProduct: orthers?.totalProduct + orthers?.totalProduct,
-        },
-        {
-          arrayFilters: [{ "element._id": { $eq: idOrther._id } }],
-          upsert: true,
-        }
-      );
-    } else {
-      const ortherItems = {
-        description: {
-          ...product.description,
-          brand: product.authorBrand.brand,
-          category: product.authorCatego.name,
-        },
-        imageUrl: product.imageUrl,
-        productId: product._id,
-        price: product.description.latest_price,
-        quantity: 1,
-      };
-
-      const orther = await Orther.updateMany(
-        { _id: orthers?._id },
-        {
-          $push: { ortherItems: ortherItems },
-          totalProduct: orthers?.totalProduct + 1,
-        }
-      );
-    }
+    //   const orther = await Orther.updateMany(
+    //     { _id: orthers?._id },
+    //     {
+    //       $push: { ortherItems: ortherItems },
+    //       totalProduct: orthers?.totalProduct + 1,
+    //     }
+    //   );
+    // }
   }
 
   sendResponse(res, 200, true, [], null, "Create Orther Success");
@@ -138,6 +158,17 @@ ortherController.getListOrther = catchAsync(async (req, res, next) => {
     }
   }
   if (user.role === "master") {
+    const orthers = await Orther.find({});
+    sendResponse(
+      res,
+      200,
+      true,
+      { data: orthers },
+      null,
+      "get list orther success"
+    );
+  }
+  if (user.role === "driver") {
     const orthers = await Orther.find({});
     sendResponse(
       res,
@@ -273,14 +304,14 @@ ortherController.updateOrther = catchAsync(async (req, res, next) => {
     sendResponse(res, 200, true, [], null, "Update Orther Success");
   }
 
-  if (user.role === "master") {
+  if (user.role === "master" || user.role === "driver") {
+   
     for (let i = 0; i < dataOrthers.length; i++) {
       user = await User.findById(dataOrthers[i].userId);
       let orthers = await Orther.findOne({ userId: user._id });
       const product = await Product.findById(orthers?.ortherItems[i].productId);
-
       if (
-        orthers?.ortherItems[i]._id.equals(dataOrthers[i]._id) &&
+        // orthers?.ortherItems[i]._id.equals(dataOrthers[i]._id) &&
         dataOrthers[i].status === "confirmed"
       ) {
         await Orther.updateMany(
@@ -300,7 +331,8 @@ ortherController.updateOrther = catchAsync(async (req, res, next) => {
           product.stock = "outofstock";
         }
         product.save();
-      } else if (orthers?.ortherItems[i]._id.equals(dataOrthers[i]._id)) {
+      } else  {
+        
         await Orther.updateMany(
           { _id: orthers._id },
           { $set: { "ortherItems.$[element].status": dataOrthers[i].status } },
@@ -308,7 +340,6 @@ ortherController.updateOrther = catchAsync(async (req, res, next) => {
         );
       }
     }
-
     sendResponse(res, 200, true, {}, null, "Update Orther Success");
   }
 });
@@ -324,7 +355,7 @@ ortherController.getListBookingProduct = catchAsync(async (req, res, next) => {
     );
 
   const orthers = await Orther.findOne({ userId: user._id });
-
+    
   if (orthers) {
     const data = orthers.ortherItems.filter((obj) => {
       if (
@@ -354,5 +385,26 @@ ortherController.getListBookingProduct = catchAsync(async (req, res, next) => {
     );
   }
 });
+// get list orther done
+ortherController.getListOrtherDone = catchAsync(async (req, res, next) => {
+  const currentUserId = req.userId;
+  const user = await User.findById(currentUserId);
+  if (!user)
+    throw new AppError(
+      400,
+      "user not exists",
+      "Get List Booking Product Error"
+    );
 
+  const orthers = await Orther.findOne({ userId: user._id });
+  const data = orthers.ortherItems.filter((e) => e.status === "done")
+  sendResponse(
+    res,
+    200,
+    true,
+    { data },
+    null,
+    "Get List reviews Success"
+  );
+})
 module.exports = ortherController;

@@ -20,6 +20,8 @@ const ortherSchema = new Schema(
         imageUrl: [{ type: String, required: true }],
         price: { type: Number, require: true },
         quantity: { type: Number, require: true, default: 1 },
+        ratings: { type: Number, require: true },
+        reviews: [{ type: Schema.Types.ObjectId, ref: "Review" }],
       },
     ],
     totalPrice: { type: Number, require: true, default: 0 },

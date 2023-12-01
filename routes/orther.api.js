@@ -7,6 +7,7 @@ const {
   updateOrther,
   getListBookingProduct,
   updateQuantity,
+  getListOrtherDone,
 } = require("../controller/orther.controller");
 const authentication = require("../middlwe/authentication");
 const validations = require("../middlwe/validations");
@@ -30,6 +31,13 @@ router.get(
   authentication.loginRequired,
   validations.validate([]),
   getListOrther
+);
+// get all listorther review
+router.get(
+  "/listorther/reviews",
+  authentication.loginRequired,
+  validations.validate([]),
+  getListOrtherDone
 );
 // update product in orther
 router.put(

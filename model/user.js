@@ -14,7 +14,7 @@ const userSchema = new Schema(
     role: {
       type: String,
       require: false,
-      enum: ["normal", "master"],
+      enum: ["normal", "master", "driver"],
       default: "normal",
     },
   },

@@ -12,7 +12,7 @@ const reviewController = {};
 reviewController.addReview = catchAsync(async (req, res, next) => {
   const currentUserId = req.userId;
   const productId = req.params.productId;
-  const { content, rating } = req.body;
+  const { content, rating, id } = req.body;
 
   const user = await User.findById(currentUserId);
   if (!user) throw new AppError(400, "user not exits", "create review error");
@@ -23,44 +23,52 @@ reviewController.addReview = catchAsync(async (req, res, next) => {
 
   const userReview = await Review.findOne({ authorProductId: product._id });
 
-  if (userReview) {
-    throw new AppError(400, "you rated", "create review error");
-  } else {
-    let orther = await Orther.findOne({
-      "ortherItems.productId": new ObjectId(`${productId}`),
-    });
+  const orther = await Orther.findOne({
+    "ortherItems.productId": new ObjectId(`${productId}`),
+  });
 
-    orther = orther.ortherItems.find((obj) => {
-      if (obj.productId.equals(product._id)) {
-        return true;
-      }
-    });
-
-    if (orther.status !== "done") {
-      throw new AppError(400, "you can not reivew", "create review error");
-    } else {
-      const review = await Review.create({
-        authorProductId: product._id,
-        userId: user._id,
-        content: content,
-        rating: rating,
-      });
-
-      let total = ((product.ratings + rating) / 2) * 100;
-      const percentTotal = Number(total.toString().slice(1));
-      if (percentTotal === 50) {
-        total = total / 100;
-      } else if (percentTotal < 50 || percentTotal > 50) {
-        total = Math.round(total / 100);
-      }
-
-      const pushProduct = await Product.findByIdAndUpdate(product._id, {
-        $push: { reviews: review._id },
-        ratings: total,
-      });
-
-      sendResponse(res, 200, true, {}, null, "create review error");
+  const ortherStatus = orther.ortherItems.find((obj) => {
+    if (obj._id.equals(id)) {
+      return true;
     }
+  });
+  console.log(ortherStatus)
+  if (ortherStatus.status !== "done") {
+    throw new AppError(400, "you can not reivew", "create review error");
+  } else {
+    // const review = await Review.create({
+    //   authorProductId: product._id,
+    //   userId: user._id,
+    //   content: content,
+    //   rating: rating,
+    // });
+
+    // let total = ((product.ratings + rating) / 2) * 100;
+    // const percentTotal = Number(total.toString().slice(1));
+    // if (percentTotal === 50) {
+    //   total = total / 100;
+    // } else if (percentTotal < 50 || percentTotal > 50) {
+    //   total = Math.round(total / 100);
+    // }
+
+    // const pushProduct = await Product.findByIdAndUpdate(product._id, {
+    //   $push: { reviews: review._id },
+    //   ratings: total,
+    // });
+
+    // for (let i = 0; i < orther.ortherItems.length; i++) {
+    //   const element = orther.ortherItems[i];
+    //   if(element._id == ortherStatus._id){
+    //     await Orther.updateMany(
+    //       { "ortherItems._id": element._id },
+    //       {
+    //         $push: { reviews: review._id },
+    //         $set: { "ortherItems.$.ratings": total },
+    //       }
+    //     );
+    //   }
+    // }
+    sendResponse(res, 200, true, {}, null, "create review success");
   }
 });
 // get single review
